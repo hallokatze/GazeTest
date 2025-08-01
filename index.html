@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>WebGazer Eye Tracker</title>
-  <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+  <!-- 로컬에 업로드한 webgazer.js를 불러옵니다 -->
+  <script src="webgazer.js"></script>
   <style>
     body {
       font-family: sans-serif;
@@ -22,16 +23,17 @@
 
   <script>
     window.onload = async function () {
-      // WebGazer 시작
-      await webgazer.setRegression('ridge') // 시선 추정 알고리즘
-        .setGazeListener((data, timestamp) => {
-          if (data == null) return;
-          console.log(`시선 좌표: x=${data.x}, y=${data.y} (시간: ${timestamp})`);
-        })
-        .begin();
-      
-      // 디버깅용 화면 숨기기 원하면 이 줄을 주석 해제하세요
-      // webgazer.showPredictionPoints(false);
+      try {
+        await webgazer.setRegression('ridge')
+          .setGazeListener((data, timestamp) => {
+            if (data == null) return;
+            console.log(`시선 좌표: x=${data.x}, y=${data.y} (시간: ${timestamp})`);
+          })
+          .begin();
+      } catch (e) {
+        document.getElementById("message").innerText = "WebGazer 로드 실패: " + e;
+        console.error(e);
+      }
     };
   </script>
 </body>
