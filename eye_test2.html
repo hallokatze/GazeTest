@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>WebGazer Eye Tracker</title>
+  <title>WebGazer Eye Tracker Test</title>
   <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
   <style>
     body {
@@ -10,28 +10,28 @@
       text-align: center;
       margin-top: 50px;
     }
-    #message {
+    #status {
       margin-top: 20px;
-      color: #444;
+      font-size: 18px;
+      color: green;
     }
   </style>
 </head>
 <body>
   <h1>👁 WebGazer 시선 추적 테스트</h1>
-  <p id="message">잠시 후 브라우저에서 카메라 접근 허용을 요청합니다. "허용"을 눌러 주세요.</p>
+  <p>잠시 후 브라우저에서 카메라 접근을 요청합니다. 허용해 주세요.</p>
+  <p id="status">WebGazer 초기화 중...</p>
 
   <script>
     window.onload = async function () {
-      // WebGazer 시작
-      await webgazer.setRegression('ridge') // 시선 추정 알고리즘
-        .setGazeListener((data, timestamp) => {
-          if (data == null) return;
-          console.log(`시선 좌표: x=${data.x}, y=${data.y} (시간: ${timestamp})`);
+      await webgazer.setRegression('ridge')
+        .setGazeListener((data, time) => {
+          if (data) {
+            document.getElementById("status").innerText = `시선 좌표: x=${Math.round(data.x)}, y=${Math.round(data.y)}`;
+            console.log("gaze:", data);
+          }
         })
         .begin();
-      
-      // 디버깅용 화면 숨기기 원하면 이 줄을 주석 해제하세요
-      // webgazer.showPredictionPoints(false);
     };
   </script>
 </body>
